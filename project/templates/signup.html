@@ -1,0 +1,35 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<form method="POST" enctype="multipart/form-data" action="{{ url_for('main.signUp') }}">
+
+  <div class="edit-container">
+    <div class="input-box">
+        <div class="input-container">
+            <label for="user">Username</label>
+            <input id="user" type="text" name="user"
+                title="Specify your user name"
+                required
+            >
+        </div>
+        <div class="input-container">
+            <label for="caption">Password</label>
+            <input id="caption" type="password" name="caption"
+                title="Provide a nice and short caption to your photo"
+                required
+            >
+        </div>
+
+        <div class="input-container button blue">
+            <input type="submit" value="Signup">
+            <a style="padding-left: 10px" href="{{ url_for('main.homepage') }}">Cancel</a>
+        </div>
+    </div>
+  </div>
+</form>
+
+{% if error %}
+    <p style="color: red"> {{error}}</p>
+{% endif %}
+
+{% endblock content %}
