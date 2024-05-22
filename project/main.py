@@ -14,12 +14,18 @@ main = Blueprint('main', __name__)
 # This is called when the home page is rendered. It fetches all images sorted by filename.
 @main.route('/')
 def homepage():
-  photos = db.session.query(Photo).order_by(asc(Photo.file))
+  photos = db.session.query(Photo).filter_by(private = False).order_by(asc(Photo.file))
   return render_template('index.html', photos = photos)
 
 @main.route('/uploads/<name>')
 def display_file(name):
-  return send_from_directory(current_app.config["UPLOAD_DIR"], name)
+  response = make_response(send_from_directory(current_app.config["UPLOAD_DIR"], name))
+
+  photo = db.session.query(Photo).filter_by(file = name).one()
+  # Add header to response to prevent search engines from indexing the image if it is private
+  if photo.private:
+    response.headers['X-Robots-Tag'] = 'noindex, nofollow'
+  return response
 
 # Upload a new photo
 @main.route('/upload/', methods=['GET','POST'])
@@ -40,12 +46,21 @@ def newPhoto():
     filepath = os.path.join(current_app.config["UPLOAD_DIR"], file.filename)
     file.save(filepath)
 
+    # Get whether user made the upload private
+    private = False
+    if request.form.get('private', None) == "on":
+      private = True 
+  
     newPhoto = Photo(name = request.form['user'], 
                     caption = request.form['caption'],
                     description = request.form['description'],
-                    file = file.filename)
+                    file = file.filename,
+                    private = private)
     db.session.add(newPhoto)
-    flash('New Photo %s Successfully Created' % newPhoto.name)
+    if private:
+      flash('New Photo at /uploads/%s' % newPhoto.file)
+    else:
+      flash('New Photo %s Successfully Created' % newPhoto.name)
     db.session.commit()
     return redirect(url_for('main.homepage'))
   else:
