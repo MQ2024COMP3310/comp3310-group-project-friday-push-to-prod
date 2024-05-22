@@ -52,6 +52,10 @@ def populate_db():
     session.commit()
 
     # Initalise Default Users
+    user = User(username = 'admin', password=generate_password_hash('admin', method='pbkdf2:sha256'), admin=True)
+    session.add(user)
+    session.commit()
+
     user = User(username = 'William Warby', password=generate_password_hash('gentoo', method='pbkdf2:sha256'))
     session.add(user)
     session.commit()

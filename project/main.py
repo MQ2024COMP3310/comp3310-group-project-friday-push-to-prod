@@ -3,11 +3,11 @@ from flask import (
   flash, redirect, url_for, send_from_directory, 
   current_app, make_response
 )
-from .models import Photo
+from .models import Photo, User
 from sqlalchemy import asc, text
 from . import db
 import os
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 main = Blueprint('main', __name__)
 
@@ -55,6 +55,12 @@ def newPhoto():
 @login_required
 def editPhoto(photo_id):
   editedPhoto = db.session.query(Photo).filter_by(id = photo_id).one()
+  userId = current_user.get_id()
+  user = User.query.filter_by(id=userId).first() 
+  if user.username != editedPhoto.name and not user.admin:
+    flash("You are not authorised to edit this photo")
+    return redirect(url_for('main.homepage'))
+
   if request.method == 'POST':
     if request.form['user']:
       editedPhoto.name = request.form['user']
