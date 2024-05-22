@@ -7,9 +7,16 @@ from .models import User
 from sqlalchemy import asc, text
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user
+from flask_login import login_user, login_required, logout_user
 
 auth = Blueprint('auth', __name__)
+
+@auth.route('/logout')
+@login_required
+def logout():
+  logout_user()
+  return redirect(url_for('main.homepage'))
+
 
 # Sign Up Page and sign up form submission
 @auth.route('/signup/', methods = ['GET', 'POST'])
