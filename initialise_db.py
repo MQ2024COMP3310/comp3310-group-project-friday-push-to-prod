@@ -1,5 +1,7 @@
 from project import db, create_app, models
 from project.models import Photo
+from project.models import User
+from werkzeug.security import generate_password_hash, check_password_hash
 
 def populate_db():
    
@@ -48,6 +50,48 @@ def populate_db():
     photo = Photo(name = 'Edgar', caption = 'Oporto, Portugal', description = 'A man sitting on a bench at a train station.', file = 'edgar-Q0g5Thf7Ank.jpg') 
     session.add(photo)
     session.commit()
+
+    # Initalise Default Users
+    user = User(username = 'William Warby', password=generate_password_hash('gentoo', method='pbkdf2:sha256'))
+    session.add(user)
+    session.commit()
+
+    user = User(username = 'Javier Patino Loira', password=generate_password_hash('gentoo', method='pbkdf2:sha256'))
+    session.add(user)
+    session.commit()
+
+    user = User(username = 'Jordie Rubies', password=generate_password_hash('gentoo', method='pbkdf2:sha256'))
+    session.add(user)
+    session.commit()
+
+    user = User(username = 'Jakub Neskora', password=generate_password_hash('gentoo', method='pbkdf2:sha256'))
+    session.add(user)
+    session.commit()
+
+    user = User(username = 'Ahmed Ali', password=generate_password_hash('gentoo', method='pbkdf2:sha256'))
+    session.add(user)
+    session.commit()
+
+    user = User(username = 'Hanvin Cheong', password=generate_password_hash('gentoo', method='pbkdf2:sha256'))
+    session.add(user)
+    session.commit()
+
+    user = User(username = 'Ekaterina Bogdan', password=generate_password_hash('gentoo', method='pbkdf2:sha256'))
+    session.add(user)
+    session.commit()
+
+    user = User(username = 'Damian Ochrymowicz', password=generate_password_hash('gentoo', method='pbkdf2:sha256'))
+    session.add(user)
+    session.commit()
+
+    user = User(username = 'Dima DallAcqua', password=generate_password_hash('gentoo', method='pbkdf2:sha256'))
+    session.add(user)
+    session.commit()
+
+    user = User(username = 'Edgar', password=generate_password_hash('gentoo', method='pbkdf2:sha256'))
+    session.add(user)
+    session.commit()
+
 
 if __name__ == '__main__':
   app = create_app()

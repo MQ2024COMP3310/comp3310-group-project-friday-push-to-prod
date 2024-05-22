@@ -17,4 +17,17 @@ class Photo(db.Model):
            'file'         : self.file,
            'desc'         : self.description,
        }
+
+class User(db.Model):
+    username = db.Column(db.String(50), primary_key=True)
+    password = db.Column(db.String(100))
+
+    @property
+    def serialize(self):
+       """Return object data in easily serializeable format"""
+       return {
+            'username'        : self.username,
+            'password'    : self.password
+       }
+ 
  
