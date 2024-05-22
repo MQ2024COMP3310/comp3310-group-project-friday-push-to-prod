@@ -27,7 +27,8 @@ def login():
     password = request.form.get('password')
 
     if not user or not check_password_hash(user.password, password):
-        return render_template('login.html', error = "Invalid Login Details, Try Again!")
+        flash("Invalid Login Details, Try Again!")
+        return render_template('login.html')
 
     login_user(user)
 
@@ -43,7 +44,8 @@ def signUp():
     
     user = User.query.filter_by(username=username).first()
     if user:
-      return render_template('signup.html', error = "User already exists navigate to /login")
+      flash("User already exits navigate to /login")
+      return render_template('signup.html')
     
     password = request.form.get('password')
 
