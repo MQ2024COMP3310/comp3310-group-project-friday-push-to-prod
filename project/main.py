@@ -120,5 +120,12 @@ def deletePhoto(photo_id):
   flash('Photo id %s Successfully Deleted' % photo_id)
   return redirect(url_for('main.homepage'))
 
-
+# This is called when a user clicks like on a photo
+@main.route('/like/<int:photo_id>/', methods = ['GET','POST'])
+# If user not logged in they will be redirected to /login 
+@login_required
+def likePhoto(photo_id):
+  photo = db.session.query(Photo).filter_by(id = photo_id).one()
+  
+  return redirect(url_for('main.homepage'))
 
