@@ -78,6 +78,13 @@ def editPhoto(photo_id):
 @main.route('/photo/<int:photo_id>/delete/', methods = ['GET','POST'])
 @login_required
 def deletePhoto(photo_id):
+  photo = db.session.query(Photo).filter_by(id = photo_id).one()
+  userId = current_user.get_id()
+  user = User.query.filter_by(id=userId).first() 
+  if user.username != photo.name and not user.admin:
+    flash("You are not authorised to delete this photo")
+    return redirect(url_for('main.homepage'))
+
   fileResults = db.session.execute(text('select file from photo where id = ' + str(photo_id)))
   filename = fileResults.first()[0]
   filepath = os.path.join(current_app.config["UPLOAD_DIR"], filename)
