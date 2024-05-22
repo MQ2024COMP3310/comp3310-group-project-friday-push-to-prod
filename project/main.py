@@ -7,6 +7,7 @@ from .models import Photo
 from sqlalchemy import asc, text
 from . import db
 import os
+from flask_login import login_required
 
 main = Blueprint('main', __name__)
 
@@ -22,6 +23,7 @@ def display_file(name):
 
 # Upload a new photo
 @main.route('/upload/', methods=['GET','POST'])
+@login_required
 def newPhoto():
   if request.method == 'POST':
     file = None
@@ -50,6 +52,7 @@ def newPhoto():
 
 # This is called when clicking on Edit. Goes to the edit page.
 @main.route('/photo/<int:photo_id>/edit/', methods = ['GET', 'POST'])
+@login_required
 def editPhoto(photo_id):
   editedPhoto = db.session.query(Photo).filter_by(id = photo_id).one()
   if request.method == 'POST':
@@ -67,6 +70,7 @@ def editPhoto(photo_id):
 
 # This is called when clicking on Delete. 
 @main.route('/photo/<int:photo_id>/delete/', methods = ['GET','POST'])
+@login_required
 def deletePhoto(photo_id):
   fileResults = db.session.execute(text('select file from photo where id = ' + str(photo_id)))
   filename = fileResults.first()[0]
