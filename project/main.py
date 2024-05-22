@@ -23,6 +23,7 @@ def display_file(name):
 
 # Upload a new photo
 @main.route('/upload/', methods=['GET','POST'])
+# If user not logged in they will be redirected to /login 
 @login_required
 def newPhoto():
   if request.method == 'POST':
@@ -52,12 +53,17 @@ def newPhoto():
 
 # This is called when clicking on Edit. Goes to the edit page.
 @main.route('/photo/<int:photo_id>/edit/', methods = ['GET', 'POST'])
+# If user not logged in they will be redirected to /login 
 @login_required
 def editPhoto(photo_id):
+
   editedPhoto = db.session.query(Photo).filter_by(id = photo_id).one()
-  userId = current_user.get_id()
-  user = User.query.filter_by(id=userId).first() 
-  if user.username != editedPhoto.name and not user.admin:
+  '''
+  Check if the current user's username does not match the uploaded photo's username
+  and the user is not an admin.
+  If so, return to the home page with an error message
+  '''
+  if current_user.username != editedPhoto.name and not current_user.admin:
     flash("You are not authorised to edit this photo")
     return redirect(url_for('main.homepage'))
 
@@ -76,12 +82,16 @@ def editPhoto(photo_id):
 
 # This is called when clicking on Delete. 
 @main.route('/photo/<int:photo_id>/delete/', methods = ['GET','POST'])
+# If user not logged in they will be redirected to /login 
 @login_required
 def deletePhoto(photo_id):
   photo = db.session.query(Photo).filter_by(id = photo_id).one()
-  userId = current_user.get_id()
-  user = User.query.filter_by(id=userId).first() 
-  if user.username != photo.name and not user.admin:
+  '''
+  Check if the current user's username does not match the uploaded photo's username
+  and the user is not an admin.
+  If so, return to the home page with an error message
+  '''
+  if current_user.username != photo.name and not current_user.admin:
     flash("You are not authorised to delete this photo")
     return redirect(url_for('main.homepage'))
 
