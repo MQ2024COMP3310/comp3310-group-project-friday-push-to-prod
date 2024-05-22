@@ -1,7 +1,7 @@
 from project import db, create_app, models
 from project.models import Photo
 from project.models import User
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 
 def populate_db():
    
