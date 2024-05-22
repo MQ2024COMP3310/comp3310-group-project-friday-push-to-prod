@@ -17,6 +17,23 @@ def logout():
   logout_user()
   return redirect(url_for('main.homepage'))
 
+# Login Page 
+@auth.route('/login/', methods = ['GET', 'POST'])
+def login():
+  if request.method == 'POST':
+    username = request.form.get('user')
+    
+    user = User.query.filter_by(username=username).first() 
+    password = request.form.get('password')
+
+    if not user or not check_password_hash(user.password, password):
+        return render_template('login.html', error = "Invalid Login Details, Try Again!")
+
+    login_user(user)
+
+    return redirect(url_for('main.homepage'))
+  else:
+    return render_template('login.html')
 
 # Sign Up Page and sign up form submission
 @auth.route('/signup/', methods = ['GET', 'POST'])
