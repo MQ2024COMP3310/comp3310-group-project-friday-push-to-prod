@@ -1,4 +1,5 @@
 from . import db
+from flask_login import UserMixin
 
 class Photo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,8 +19,9 @@ class Photo(db.Model):
            'desc'         : self.description,
        }
 
-class User(db.Model):
-    username = db.Column(db.String(50), primary_key=True)
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(100))
 
     @property
