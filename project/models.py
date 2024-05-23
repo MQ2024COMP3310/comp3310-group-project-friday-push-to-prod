@@ -8,7 +8,7 @@ class Photo(db.Model):
     file = db.Column(db.String(250), nullable=False)
     description = db.Column(db.String(600), nullable=True)
     private =  db.Column(db.Boolean(False))
-    likes = db.Column(db.JSON())
+    likes = db.relationship('Like', back_populates='photo')
 
     @property
     def serialize(self):
@@ -22,6 +22,10 @@ class Photo(db.Model):
            'private'    : self.private,
            'likes'  : self.likes,
        }
+    
+    @property
+    def likeCount(self):
+        return len(self.likes)
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -39,4 +43,10 @@ class User(UserMixin, db.Model):
             'admin' : self.admin
        }
  
- 
+class Like(db.Model):
+    photo_id = db.Column(db.Integer, db.ForeignKey('photo.id'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+
+    photo = db.relationship('Photo', back_populates='likes')
+
+    
