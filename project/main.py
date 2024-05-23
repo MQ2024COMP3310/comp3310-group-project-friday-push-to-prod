@@ -14,6 +14,8 @@ main = Blueprint('main', __name__)
 # This is called when the home page is rendered. It fetches all images sorted by filename.
 @main.route('/')
 def homepage():
+  # Filter out private photos from the main page of the site
+  # Prevent unauthorised access to private photos
   photos = db.session.query(Photo).filter_by(private = False).order_by(asc(Photo.file))
   return render_template('index.html', photos = photos)
 
@@ -23,6 +25,7 @@ def display_file(name):
 
   photo = db.session.query(Photo).filter_by(file = name).one()
   # Add header to response to prevent search engines from indexing the image if it is private
+  # Prevents Sensitive Data Exposure in search results
   if photo.private:
     response.headers['X-Robots-Tag'] = 'noindex, nofollow'
   return response
@@ -78,6 +81,7 @@ def editPhoto(photo_id):
   and the user is not an admin.
   If so, return to the home page with an error message
   '''
+  # Prevent Unauthorised Access to page and photos
   if current_user.username != editedPhoto.name and not current_user.admin:
     flash("You are not authorised to edit this photo")
     return redirect(url_for('main.homepage'))
@@ -106,6 +110,7 @@ def deletePhoto(photo_id):
   and the user is not an admin.
   If so, return to the home page with an error message
   '''
+  # Prevent Unauthorised Access to page and photos
   if current_user.username != photo.name and not current_user.admin:
     flash("You are not authorised to delete this photo")
     return redirect(url_for('main.homepage'))
@@ -123,10 +128,14 @@ def deletePhoto(photo_id):
 # This is called when a user clicks like on a photo
 @main.route('/like/<int:photo_id>/', methods = ['GET','POST'])
 # If user not logged in they will be redirected to /login 
+# Prevents unauthorised likes from non-logged in users
 @login_required
 def likePhoto(photo_id):
+
+  # Check if a like exists already for this user and this photo
   liked = db.session.query(Like).filter_by(photo_id = photo_id, user_id = current_user.id).first()
   if liked:
+    # If a like already exists, unlike the photo to prevent double liking
     db.session.delete(liked)
     db.session.commit()
     

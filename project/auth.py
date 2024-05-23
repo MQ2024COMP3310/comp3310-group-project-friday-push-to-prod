@@ -26,6 +26,7 @@ def login():
     user = User.query.filter_by(username=username).first() 
     password = request.form.get('password')
 
+    # Use password hashing to prevent Sensitive Data Exposure of plain text passwords in the event of a database breach
     if not user or not check_password_hash(user.password, password):
         flash("Invalid Login Details, Try Again!")
         return render_template('login.html')
@@ -49,7 +50,9 @@ def signUp():
     
     password = request.form.get('password')
 
+    # Use password hashing to prevent Sensitive Data Exposure of plain text passwords in the event of a database breach
     new_user = User(username = username, password=generate_password_hash(password, method='pbkdf2:sha256'))
+    # Use paramterisation to prevnt SQL injection through direct use of client side input in queries
     db.session.add(new_user)
     db.session.commit()
 
