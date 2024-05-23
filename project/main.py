@@ -3,7 +3,7 @@ from flask import (
   flash, redirect, url_for, send_from_directory, 
   current_app, make_response
 )
-from .models import Photo, User
+from .models import Photo, User, Like
 from sqlalchemy import asc, text
 from . import db
 import os
@@ -125,7 +125,15 @@ def deletePhoto(photo_id):
 # If user not logged in they will be redirected to /login 
 @login_required
 def likePhoto(photo_id):
-  photo = db.session.query(Photo).filter_by(id = photo_id).one()
-  
+  liked = db.session.query(Like).filter_by(photo_id = photo_id, user_id = current_user.id).first()
+  if liked:
+    db.session.delete(liked)
+    db.session.commit()
+    
+  else:
+    new_like = Like(photo_id=photo_id, user_id=current_user.id)
+    db.session.add(new_like)
+    db.session.commit()
+
   return redirect(url_for('main.homepage'))
 
