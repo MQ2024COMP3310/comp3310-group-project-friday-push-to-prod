@@ -41,11 +41,14 @@
             </div>
 
             <div class="image-navigation-container">
-                <a href="{{ url_for('main.likePhoto', photo_id=photo.id) }}" class="download" title="Like this photo">
-                    <div class="icon-container highlight blue">
-                        <img src="{{ url_for('static', filename='icons/like.png') }}" alt="like">
-                    </div>
-                </a>
+                <div style="display: flex">
+                    <a href="{{ url_for('main.likePhoto', photo_id=photo.id) }}" class="download" title="Like this photo">
+                        <div class="icon-container highlight blue">
+                            <img src="{{ url_for('static', filename='icons/like.png') }}" alt="like">
+                        </div>
+                    </a>
+                    <h2 style="padding-left: 5px" > {{photo.likeCount}}</h2>
+                </div>
 
                 <a href="{{ url_for('main.display_file', name=photo.file) }}" class="download" title="Download this photo" download>
                     <div class="icon-container highlight blue">
