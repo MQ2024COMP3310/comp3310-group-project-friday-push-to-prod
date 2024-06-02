@@ -47,6 +47,29 @@ class TestWebApp(unittest.TestCase):
         # TODO: Check that non-logged-in user should be redirected to /login
         assert False
 
+    def test_no_access_to_delete(self):
+        """
+        Test case to verify that unauthorised users cannot delete photos.
+
+        With non-logged in user:
+        Steps:
+        1. Attempt to delete a photo with no user logged in
+        2. Assert that the request is redirected to the /login page
+
+        With logged in user:
+        Steps:
+        1. Attempt to delete a photo which was not uploaded by the currently logged in user
+        2. Assert that an error message is shown.
+
+        With an admin user:
+        Steps:
+        1. Attempt to delete a photo which was not uploaded by the admin user
+        2. Assert that the user is able to delete the photo.
+
+        """
+        # TODO: Check that non-logged-in user should be redirected to /login
+        assert False
+
     def test_register_user(self):
         """
         Test case to verify a user can sign up and is logged in automattically
@@ -101,6 +124,30 @@ class TestWebApp(unittest.TestCase):
         1. Create a private photo .
         2. Access the private photo witth the '/uploads/<private_photo_filename>' endpoint.
         3. Assert that the response headers include the 'X-Robots-Tag' header with the value 'noindex, nofollow'.
+        """
+        # TODO: Implement the test case
+        pass
+    def test_like_unlike_photo(self):
+        """
+        Test case to verify that a user can like and unlike a photo.
+
+        Steps:
+        1. Log in as a test user.
+        2. Access the '/like/<photo_id>/' endpoint for a specific photo.
+        3. Assert that the like is recorded in the database.
+        4. Access the '/like/<photo_id>/' endpoint again for the same photo.
+        5. Assert that the like is removed from the database (unliked).
+        """
+
+        pass
+    def test_private_not_on_home_page(self):
+        """
+        Test case to ensure that private photos are not displayed on the main page.
+
+        Steps:
+        1. Create a private photo
+        2. Navigate to the home page
+        3. Assert that the private photo uploaded is not in the html of the main page.
         """
         # TODO: Implement the test case
         pass
